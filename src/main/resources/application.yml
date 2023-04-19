@@ -1,0 +1,11 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/ # 設置 Thymeleaf 的模板所在目錄，預設為 "classpath:/templates/"
+    suffix: .html # 設置 Thymeleaf 的模板後綴名，預設為 ".html"
+    cache: false # 設置是否開啟 Thymeleaf 的緩存，預設為 true
+    mode: HTML # 設置 Thymeleaf 的渲染模式，可選值為 HTML、XML、TEXT、JAVASCRIPT、CSS，預設為 HTML
+  security:
+    user: 
+      name: josh
+      password: josh
+      role: admin
