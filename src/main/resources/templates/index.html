@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Welcome to Ruler</title>
+<link th:href="@{/css/index.css}" rel="stylesheet" />
+</head>
+<body>
+	<div class="container">
+		<h1>
+			<a href="#menu">Click me</a>
+		</h1>
+
+		<div class="popover" id="menu">
+			<div class='content'>
+				<a href="#" class="close"></a>
+				<div class='nav'>
+					<ul class='nav_list'>
+
+						<div class='nav_list_item'>
+							<li><a th:href="@{/intro}">Intro</a></li>
+						</div>
+						<div class='nav_list_item'>
+							<li><a th:href="@{/admin}">Admin</a></li>
+						</div>
+						<div class='nav_list_item'>
+							<li><a th:href="@{/user}">User</a></li>
+						</div>
+						<div class='nav_list_item'>
+							<li><a th:href="@{/login}">Login</a></li>
+						</div>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
