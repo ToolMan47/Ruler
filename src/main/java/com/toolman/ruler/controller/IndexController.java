@@ -53,4 +53,10 @@ public class IndexController {
 	return model;
     }
 
+    @GetMapping("/error")
+    public ModelAndView errorPage(ModelAndView model) {
+	model.setViewName("error");
+	return model;
+    }
+
 }
