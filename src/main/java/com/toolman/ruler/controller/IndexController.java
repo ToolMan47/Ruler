@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.toolman.ruler.service.AdminService;
 import com.toolman.ruler.service.IntroService;
 
 /**
@@ -25,6 +27,8 @@ public class IndexController {
     
     @Autowired
     private IntroService introService;
+    @Autowired
+    private AdminService adminService;
 
     @GetMapping("/")
     public ModelAndView indexPage(@AuthenticationPrincipal() UserDetails authUser, ModelAndView model) {
@@ -58,5 +62,18 @@ public class IndexController {
 	model.setViewName("error");
 	return model;
     }
+    
+    
+    @GetMapping("/intro/secret")
+    @ResponseBody
+    public Map<String, String> secretPage() {
+	// the method is security by ADMIN auth
+	return adminService.getSecretMap();
+    }
+
+    
+    
+    
+    
 
 }
