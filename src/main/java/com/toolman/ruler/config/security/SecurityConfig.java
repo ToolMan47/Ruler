@@ -56,16 +56,8 @@ public class SecurityConfig {
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
 	AuthenticationManagerBuilder authManagerBuild = http.getSharedObject(AuthenticationManagerBuilder.class);
 	authManagerBuild.authenticationProvider(daoAuthenticationProvider);
-//	authManagerBuild.authenticationProvider(new MyDaoAuthenticationProvider());
 
 	return authManagerBuild.build();
     }
 
-    // method 2
-//    @Bean
-//    public AuthenticationManager authManager(AuthenticationManagerBuilder builder) throws Exception {
-//	builder.authenticationProvider(null);
-//	
-//	return builder.build();
-//    }
 }

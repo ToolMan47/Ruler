@@ -39,7 +39,8 @@ public class MyDaoAuthenticationProvider implements AuthenticationProvider {
 	// check pwd
 	String userPwd = dbUser.getPassword();
 	if (userPwd.equals(formPwd)) {
-	    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(dbUser.getUsername(),
+	    UsernamePasswordAuthenticationToken auth = UsernamePasswordAuthenticationToken
+		    .authenticated(dbUser,
 		    dbUser.getPassword(), dbUser.getAuthorities());
 	    return auth;
 	}
