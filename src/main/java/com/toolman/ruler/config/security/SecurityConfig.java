@@ -42,7 +42,7 @@ public class SecurityConfig {
 	http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user")
 		.authenticated()
 		.requestMatchers("/admin")
-		.authenticated()
+		.hasAuthority("ADMIN")
 		.anyRequest()
 		.permitAll());
 
