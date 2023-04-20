@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller()
-@RequestMapping("/login")
+@RequestMapping()
 public class LoginController {
 
-    @GetMapping()
+    @GetMapping("/login")
     public String defaultPage() {
 	return "login";
     }

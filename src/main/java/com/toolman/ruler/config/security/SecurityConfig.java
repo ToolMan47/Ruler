@@ -33,21 +33,21 @@ public class SecurityConfig {
 	// defense
 	http.cors().and().csrf();
 
-	// 一般公開頁面
-	http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/", "/intro")
-		.permitAll()
-		.requestMatchers("/login") // 避免出現 ERR_TOO_MANY_REDIRECTS
-		.permitAll()
-		.requestMatchers("/logout") // 避免出現 ERR_TOO_MANY_REDIRECTS
-		.permitAll()
-		.requestMatchers("/error")
+	// Spring Security Default 設定: 全部都進入管控，就算是 "/" 也是
+	// 先設定要驗證的路徑，其餘的可以隨意存取
+	http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user")
+		.authenticated()
+		.requestMatchers("/admin")
+		.authenticated()
+		.anyRequest()
 		.permitAll());
 
 	// 登入處理
 	http.formLogin(form -> form.loginPage("/login").failureUrl("/error"));
-	
+
+	// 登出處理
 	http.logout(out -> out.logoutUrl("/logout"));
-	
+
 	return http.build();
     }
 
@@ -68,11 +68,4 @@ public class SecurityConfig {
 //	
 //	return builder.build();
 //    }
-
-    // 靜態資源取得
-    @Bean
-    public WebSecurityCustomizer ignoringCustomizer() {
-	return (web) -> web.ignoring().requestMatchers(resources);
-    }
-
 }
