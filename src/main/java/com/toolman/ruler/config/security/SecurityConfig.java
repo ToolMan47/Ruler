@@ -1,6 +1,7 @@
 package com.toolman.ruler.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,9 @@ import com.toolman.ruler.config.security.provider.MyDaoAuthenticationProvider;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${spring.security.holly-debug:false}")
+    boolean webSecurityDebug;
+    
     final String[] resources = { "/css/*", "/js/*", "/images/*", "*/favicon.ico" };
 
     @Autowired
@@ -46,7 +50,7 @@ public class SecurityConfig {
 	http.formLogin(form -> form.loginPage("/login").failureUrl("/error"));
 
 	// 登出處理
-	http.logout(out -> out.logoutUrl("/logout"));
+	http.logout();
 
 	return http.build();
     }
@@ -58,6 +62,13 @@ public class SecurityConfig {
 	authManagerBuild.authenticationProvider(daoAuthenticationProvider);
 
 	return authManagerBuild.build();
+    }
+    
+    // 強力 debug
+    // to log specific info about requests and applied filters
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(webSecurityDebug);
     }
 
 }

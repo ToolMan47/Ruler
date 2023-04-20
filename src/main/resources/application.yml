@@ -9,6 +9,7 @@ spring:
       name: josh
       password: josh
       role: admin
+    holly-debug: true # 強力 Spring Security Debug，可以看到 request 處理。prod 不要開
       
   h2:
     console.enabled: true
@@ -24,4 +25,4 @@ spring:
 # 打開 security filter log
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: TRACE
