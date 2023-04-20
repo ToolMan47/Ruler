@@ -11,13 +11,6 @@ public class UserController {
     
     @GetMapping("/user")
     public ModelAndView defaultPage(@AuthenticationPrincipal() UserDetails authUser, ModelAndView model) {
-	
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("authUser : " + authUser);
-//        System.out.println("principal : " + authentication.getPrincipal());
-//        System.out.println("Implementing class of UserDetails: " + authentication.getPrincipal().getClass());
-//        System.out.println("Implementing class of UserDetailsService: " + userDetailsService.getClass());
-	
 	model.addObject("name", authUser.getUsername());
 	model.addObject("role", authUser.getAuthorities());
 	model.setViewName("user");
