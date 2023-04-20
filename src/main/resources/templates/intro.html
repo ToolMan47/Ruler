@@ -6,8 +6,29 @@
 </head>
 <body>
 	<div class="container">
-		<h1>
-			Intro
+		<h1 class="left-title">Intro</h1>
+		<div class='content'>
+			<table>
+				<thead>
+					<tr>
+						<th>Username</th>
+						<th>Roles</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="entry : ${demoList}">
+						<td th:text="${entry.key}"></td>
+						<td>
+							<ul>
+								<li th:each="role : ${entry.value}" th:text="${role}"></li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<h1 class="right-title">
+			<a th:href="@{/}"> Back to Index </a>
 		</h1>
 	</div>
 </body>

@@ -1,11 +1,17 @@
 package com.toolman.ruler.controller;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.toolman.ruler.service.IntroService;
 
 /**
  * this controller is for getting web view
@@ -16,11 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller()
 @RequestMapping("/**")
 public class IndexController {
-
-//    @GetMapping()
-//    public String defaultPage() {
-//	return "index";
-//    }
+    
+    @Autowired
+    private IntroService introService;
 
     @GetMapping("/")
     public ModelAndView indexPage(@AuthenticationPrincipal() UserDetails authUser, ModelAndView model) {
@@ -34,8 +38,19 @@ public class IndexController {
     }
 
     @GetMapping("/intro")
-    public String introPage() {
-	return "intro";
+    public ModelAndView introPage(ModelAndView model) {
+	
+	Map<String, Set<String>> demoList = introService.getDemoList();
+	
+	demoList.entrySet().stream().forEach(entry -> {
+	    String key = entry.getKey();
+	    Set<String> value = entry.getValue();
+	    System.out.println("Key: " + key + " Value: " + value.toString());
+	});
+	
+	model.addObject("demoList", demoList);
+	model.setViewName("intro");
+	return model;
     }
 
 }
