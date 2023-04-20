@@ -11,11 +11,17 @@
 .center-top h1 {
   color: #87CEFA;
 }
-.center-top span {
+.center-top p {
   font-size: 30px;
   color: #87CEFA;
 }
 
+.left-title{
+	margin-right: 20px;
+}
+.right-title {
+	margin-left: 20px;
+}
 .container {
     min-height: 100vh;
     display: flex;
@@ -24,6 +30,7 @@
     scroll-behavior: smooth;
     background: #131313;
     font-family:'Helvetica Neue', sans-serif;
+    color: #87CEFA;
 }
 
 h1 a {

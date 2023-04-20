@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User Page</title>
+<title>User Page</title>
+<link th:href="@{/css/basic.css}" rel="stylesheet" />
 </head>
 <body>
-    <h1>User Page</h1>
-    <p th:text="${error}"></p>
-    <h2>The User is</h2>
-    <p th:text="${name}"></p>
-    <h2>The Role is</h2>
-    <p th:text="${role}"></p>
-    
+	<div class="container">
+		<h1 class="left-title">User Page</h1>
+		<div class='content'>
+			<p th:text="${error}"></p>
+			<h2>The User is</h2>
+			<p th:text="${name}"></p>
+			<h2>The Role is</h2>
+			<p th:text="${role}"></p>
+		</div>
+		<h1 class="right-title">
+			<a th:href="@{/}"> Back to Index </a>
+		</h1>
+	</div>
 </body>
 </html>
