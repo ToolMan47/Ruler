@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
 <title>Welcome to Ruler</title>
 <link th:href="@{/css/index.css}" rel="stylesheet" />
 </head>
 <body>
+	<div class="center-top">
+		<h1>UserDetails : </h1>
+		<span th:text="${name}">username</span>
+		<span>-</span>
+		<span th:text="${role}">authority</span>
+	</div>
 	<div class="container">
 		<h1>
-			<a href="#menu">Click me</a>
+			<a href="#menu">Menu</a>
 		</h1>
 
 		<div class="popover" id="menu">
@@ -25,15 +31,16 @@
 						<div class='nav_list_item'>
 							<li><a th:href="@{/user}">User</a></li>
 						</div>
-						<div class='nav_list_item'>
+						<div  class='nav_list_item' sec:authorize="isAnonymous()">
 							<li><a th:href="@{/login}">Login</a></li>
 						</div>
-						<div class='nav_list_item'>
-							<li><a href="#" onclick="document.getElementById('logout-form').submit();">Logout</a></li>
+						<div class='nav_list_item' sec:authorize="isAuthenticated()">
+							<li><a href="#"
+								onclick="document.getElementById('logout-form').submit();">Logout</a></li>
 						</div>
 
 						<form id="logout-form" th:action="@{/logout}" method="post">
-						    <input type="hidden" />
+							<input type="hidden" />
 						</form>
 
 					</ul>
