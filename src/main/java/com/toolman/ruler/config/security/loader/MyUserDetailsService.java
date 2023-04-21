@@ -1,4 +1,4 @@
-package com.toolman.ruler.config.security.provider;
+package com.toolman.ruler.config.security.loader;
 
 import java.util.List;
 import java.util.stream.Collectors;

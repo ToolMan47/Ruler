@@ -38,6 +38,18 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- OAuth2LoginAuthenticationFilter -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-client</artifactId>
+		</dependency>
+		<!-- oidc_provider -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-jose</artifactId>
+		</dependency>
+
+
 		<!-- thymeleaf template -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,10 +57,10 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6 -->
 		<dependency>
-		    <groupId>org.thymeleaf.extras</groupId>
-		    <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-		</dependency>		
-		
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
+
 
 		<!-- H2 Embedded DB -->
 		<dependency>

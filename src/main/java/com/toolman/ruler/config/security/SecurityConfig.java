@@ -1,5 +1,6 @@
 package com.toolman.ruler.config.security;
 
+import com.toolman.ruler.config.security.loader.MyOAuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.toolman.ruler.config.security.provider.MyDaoAuthenticationProvider;
@@ -32,6 +34,7 @@ public class SecurityConfig {
     @Autowired
     private MyDaoAuthenticationProvider daoAuthenticationProvider;
 
+
     // security filter for path
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,6 +53,9 @@ public class SecurityConfig {
 
 	// 登入處理
 	http.formLogin(form -> form.loginPage("/login").failureUrl("/error"));
+
+	// oauth2
+	http.oauth2Login(oauth -> oauth.loginPage("/login").failureUrl("/error"));
 
 	// 登出處理
 	http.logout();
