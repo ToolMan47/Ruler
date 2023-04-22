@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +37,16 @@ public class IndexController {
 
     @GetMapping("/")
     public ModelAndView indexPage(@AuthenticationPrincipal() Object principal, ModelAndView model) {
+        // pattern matching
         if (principal instanceof UserDetails userDetails) {
             model.addObject("name", userDetails.getUsername());
             model.addObject("role", userDetails.getAuthorities());
         } else if (principal instanceof DefaultOidcUser oidcUser) {
             model.addObject("name", oidcUser.getAttribute("given_name"));
             model.addObject("role", oidcUser.getAuthorities());
+        } else if (principal instanceof DefaultOAuth2User oauth2User) {
+            model.addObject("name", oauth2User.getAttribute("name"));
+            model.addObject("role", oauth2User.getAuthorities());
         }
 
         model.setViewName("index");

@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <title>Simple Login Form Example</title>
 <link th:href="@{/css/login.css}" rel="stylesheet" />
+	<!-- FB login -->
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '{your-app-id}',
+				cookie     : true,
+				xfbml      : true,
+				version    : '{api-version}'
+			});
+
+			FB.AppEvents.logPageView();
+
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
 
 </head>
 <body>
@@ -25,6 +47,7 @@
 				<button>Register</button>
 				<button type="submit">Sign in</button>
 				<button> <a th:href="@{/oauth2/authorization/google}"> Login with Google </a> </button>
+				<button> <a th:href="@{/oauth2/authorization/facebook}"> Login with Facebook </a> </button>
 			</div>
 		</form>
 
