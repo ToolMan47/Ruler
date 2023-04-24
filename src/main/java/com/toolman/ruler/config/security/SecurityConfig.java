@@ -1,5 +1,6 @@
 package com.toolman.ruler.config.security;
 
+import com.toolman.ruler.config.security.filter.JwtTokenFilter;
 import com.toolman.ruler.config.security.provider.MyJwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

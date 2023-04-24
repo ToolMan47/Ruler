@@ -1,4 +1,4 @@
-package com.toolman.ruler.config.security;
+package com.toolman.ruler.config.security.filter;
 
 import com.toolman.ruler.config.security.handler.JwtAuthenticationSuccessHandler;
 import com.toolman.ruler.utils.JwtUtils;
