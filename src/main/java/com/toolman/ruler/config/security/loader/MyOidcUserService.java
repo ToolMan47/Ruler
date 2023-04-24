@@ -8,16 +8,17 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 /**
- * for oidc eg.google
+ *
+ * Custom OidcUserService for oidc eg.google
  */
 @Slf4j
 @Service
-public class MyOAuthUserService extends OidcUserService {
+public class MyOidcUserService extends OidcUserService {
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         // TODO customize
-        log.info("customize MyOAuthUserService:{}", userRequest);
+        log.info("customize MyOidcUserService:{}", userRequest);
 
         return super.loadUser(userRequest);
     }
