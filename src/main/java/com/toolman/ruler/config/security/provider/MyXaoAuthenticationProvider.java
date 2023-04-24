@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 @Slf4j
 //@Component
-public class MyDaoAuthenticationProvider implements AuthenticationProvider {
+public class MyXaoAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private UserDetailsService userDetailsService; // MyUserDetailsService
@@ -46,7 +46,7 @@ public class MyDaoAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        log.info("---------------------MyDaoAuthenticationProvider-----------------------");
+        log.info("---------------------MyXaoAuthenticationProvider-----------------------");
 //        return authentication.equals(UsernamePasswordAuthenticationToken.class);
         return true;
     }

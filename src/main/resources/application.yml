@@ -12,8 +12,8 @@ spring:
     holly-debug: true # 強力 Spring Security Debug，可以看到 request 處理。prod 不要開
     oauth2:
         client:
-            registration: 
-                google: 
+            registration:
+                google:
                     client-id:  # google-client-id
                     client-secret:  # google-client-secret
                 facebook:
