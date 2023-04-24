@@ -1,8 +1,6 @@
 package com.toolman.ruler.config.security;
 
-import com.toolman.ruler.config.security.provider.MyDaoAuthenticationProvider;
-import com.toolman.ruler.config.security.provider.MyJwtAuthenticationProvider;
-import com.toolman.ruler.config.security.provider.MyXaoAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +27,8 @@ public class SecurityConfig {
     @Value("${spring.security.holly-debug:false}")
     boolean webSecurityDebug;
 
-
-
-    final String[] resources = {"/css/*", "/js/*", "/images/*", "*/favicon.ico"};
-
+    @Autowired
+    UserDetailsService myUserDetailsService;
 
     // security filter for path
     @Bean
@@ -47,7 +43,6 @@ public class SecurityConfig {
                 .authenticated()
                 .requestMatchers("/admin")
                 .hasAuthority("ADMIN")
-
                 .anyRequest()
                 .permitAll());
 
@@ -68,22 +63,25 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 產生預設的 DaoAuthenticationProvider
+     * 要提供 encoder, userdetailservice
+     * @return
+     */
     @Bean
-    public DaoAuthenticationProvider daoAuthProvider(UserDetailsService userDetailsService) {
+    public DaoAuthenticationProvider daoAuthProvider() {
         DaoAuthenticationProvider daoAuthProvider = new DaoAuthenticationProvider();
-        daoAuthProvider.setUserDetailsService(userDetailsService);
+        daoAuthProvider.setUserDetailsService(myUserDetailsService);
         daoAuthProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthProvider;
     }
 
-    // 不需要此配置，只要 implements AuthenticationProvider 的 Bean 就會用到 authenticate
+
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authManagerBuild = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authManagerBuild.authenticationProvider(new MyDaoAuthenticationProvider());
-        authManagerBuild.authenticationProvider(new MyJwtAuthenticationProvider());
-        authManagerBuild.authenticationProvider(new MyXaoAuthenticationProvider());
-        authManagerBuild.authenticationProvider(new DaoAuthenticationProvider());
+
+        authManagerBuild.authenticationProvider(daoAuthProvider());
 
         return authManagerBuild.build();
     }
