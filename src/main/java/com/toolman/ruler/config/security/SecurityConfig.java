@@ -1,5 +1,6 @@
 package com.toolman.ruler.config.security;
 
+import com.toolman.ruler.config.security.provider.MyJwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author ToolMan
@@ -26,7 +28,8 @@ public class SecurityConfig {
 
     @Value("${spring.security.holly-debug:false}")
     boolean webSecurityDebug;
-
+    @Autowired
+    MyJwtAuthenticationProvider jwtAuthenticationProvider;
     @Autowired
     UserDetailsService myUserDetailsService;
 
@@ -43,8 +46,13 @@ public class SecurityConfig {
                 .authenticated()
                 .requestMatchers("/admin")
                 .hasAuthority("ADMIN")
+                .requestMatchers("/rest/**")
+                .authenticated()
                 .anyRequest()
                 .permitAll());
+
+        // filter 配置
+        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 登入處理
         http.formLogin(form -> form.loginPage("/login").failureUrl("/error"));
@@ -66,7 +74,8 @@ public class SecurityConfig {
     /**
      * 產生預設的 DaoAuthenticationProvider
      * 要提供 encoder, userdetailservice
-     * @return
+     *
+     * @return DaoAuthenticationProvider
      */
     @Bean
     public DaoAuthenticationProvider daoAuthProvider() {
@@ -76,14 +85,21 @@ public class SecurityConfig {
         return daoAuthProvider;
     }
 
-
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authManagerBuild = http.getSharedObject(AuthenticationManagerBuilder.class);
-
         authManagerBuild.authenticationProvider(daoAuthProvider());
-
+        authManagerBuild.authenticationProvider(jwtAuthenticationProvider);
         return authManagerBuild.build();
+    }
+
+    @Bean
+    public JwtTokenFilter jwtTokenFilter(){
+        String ddd = "/rest/**";
+//        AuthenticationManagerBuilder authManagerBuild = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        authManagerBuild.authenticationProvider(jwtAuthenticationProvider);
+
+        return new JwtTokenFilter(ddd);
     }
 
     // 強力 debug

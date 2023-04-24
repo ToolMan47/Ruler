@@ -6,12 +6,20 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.toolman.ruler.utils.JwtUtils;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.util.Assert;
 
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -21,13 +29,13 @@ import java.util.UUID;
 
 @SpringBootTest
 class RulerApplicationTests {
+    @Autowired
+    JwtUtils jwtUtils;
     final String issuer = "ruler";
     final String subject = "apiuser";
     final String audience = "postman";
-    final String secretkey = "toolman123";
-
-
-    final String token = "eyJleHAiOjE2ODIyNDE3NTEwMTUsImFsZyI6IkhTMjU2IiwiY3R5IjoidGV4dC9wbGFpbiJ9.eyJzdWIiOiJhcGl1c2VyIiwiYXVkIjoicG9zdG1hbiIsImlzcyI6InJ1bGVyIiwiZXhwIjoxNjgyMjQ1MzUxLCJpYXQiOjE2ODIyNDE3NTEsImp0aSI6IjhlMmVlMzY2LTc2Y2EtNDE0Ni1iMjM1LTM2YTcyYTFlN2RkZiJ9.KxAAW45bOX5Warq8xjhFZ5l_RuYh0y5s34rkRLYBy_8";
+    final String secretkey = "ruler-secret-key-safe-over-32-length";
+    final String tokenValue = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJydWxlciIsInN1YiI6ImFwaXVzZXIiLCJhdWQiOiJwb3N0bWFuIiwiaWF0IjoxNjgyMzI5MzA5LCJleHAiOjE2ODIzMzI5MDksImp0aSI6IjBjMTkxYWUxLTgyZjQtNDQ4NS04Yzc1LTJlNWZkODFjN2EyYiJ9.95-QlTzxVWy4Sd4DL6s7DfaVq82VF7KaYg9NDulmv0Y";
 
 
     @Test
@@ -76,7 +84,6 @@ class RulerApplicationTests {
         jwsObject.sign(signer);
 
 
-
         System.out.println(jwsObject.getHeader().toString());
         System.out.println(jwsObject.getPayload().toString());
         System.out.println(jwsObject.getSignature().toString());
@@ -86,7 +93,7 @@ class RulerApplicationTests {
 
     @Test
     void verifyJWT() throws ParseException, NoSuchAlgorithmException, JOSEException {
-        SignedJWT signedJWT = SignedJWT.parse(token);
+        SignedJWT signedJWT = SignedJWT.parse(tokenValue);
         Header header = signedJWT.getHeader();
         Payload payload = signedJWT.getPayload();
         Base64URL signature = signedJWT.getSignature();
@@ -100,5 +107,74 @@ class RulerApplicationTests {
         boolean isVerify = signedJWT.verify(verifier);
         Assert.isTrue(isVerify);
     }
+
+    @Test
+    void stringToJwt() throws NoSuchAlgorithmException {
+        byte[] hashedKey = MessageDigest.getInstance("SHA-256").digest(secretkey.getBytes());
+        SecretKeySpec secretKeySpec = new SecretKeySpec(hashedKey, "SHA-256");
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec).build();
+
+
+        Jwt au = jwtDecoder.decode(tokenValue);
+        System.out.println(au.getHeaders());
+        System.out.println(au.getClaims());
+
+    }
+
+    @Test
+    void generateWithJJwt() {
+        SecretKey key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        Instant now = Instant.now();
+
+
+        String jws = Jwts.builder()
+                .setIssuer(issuer)
+                .setSubject(subject)
+                .setAudience(audience)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(6000)))
+                .setId(UUID.randomUUID().toString())
+                .signWith(key)
+                .compact();
+
+        System.out.println(jws);
+    }
+
+    @Test
+    void parseWithJJwt() {
+        SecretKey key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        Instant now = Instant.now();
+        String unsignJwt = Jwts.builder()
+                .setIssuer(issuer)
+                .setSubject(subject)
+                .setAudience(audience)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(3600)))
+                .setId(UUID.randomUUID().toString())
+                .compact();
+        String signJwt = Jwts.builder()
+                .setIssuer(issuer)
+                .setSubject(subject)
+                .setAudience(audience)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(3600)))
+                .setId(UUID.randomUUID().toString())
+                .signWith(key)
+                .compact();
+
+
+
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(unsignJwt);
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(signJwt);
+    }
+
+
+    @Test
+    void jwt2Jwt() {
+//        Jwt jwt = Jwt.withTokenValue(tokenValue).build();
+        Jwt jwt = jwtUtils.decodeToJwt(tokenValue);
+
+    }
+
 
 }
