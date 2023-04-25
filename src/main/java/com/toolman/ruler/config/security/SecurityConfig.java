@@ -34,9 +34,12 @@ public class SecurityConfig {
     @Autowired
     UserDetailsService myUserDetailsService;
 
+
     // security filter for path
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // 取得 shared authenticationManager
+        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
         // defense
         http.cors().and().csrf();
@@ -49,11 +52,14 @@ public class SecurityConfig {
                 .hasAuthority("ADMIN")
                 .requestMatchers("/rest/**")
                 .authenticated()
+
+
                 .anyRequest()
-                .permitAll());
+                .permitAll()
+        );
 
         // filter 配置
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtTokenFilter2(authenticationManager), UsernamePasswordAuthenticationFilter.class);
 
         // 登入處理
         http.formLogin(form -> form.loginPage("/login").failureUrl("/error"));
@@ -95,12 +101,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenFilter jwtTokenFilter(){
-        String ddd = "/rest/**";
-//        AuthenticationManagerBuilder authManagerBuild = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authManagerBuild.authenticationProvider(jwtAuthenticationProvider);
+    public JwtTokenFilter jwtTokenFilter2(AuthenticationManager authManager) throws Exception {
 
-        return new JwtTokenFilter(ddd);
+        return new JwtTokenFilter(authManager);
     }
 
     // 強力 debug
