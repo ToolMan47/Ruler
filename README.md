@@ -4,8 +4,8 @@
 
 ## 功能
 - Username/Password Login
-- Google Login
-- Facebook Login
+- Google Login (Oidc)
+- Facebook Login (OAuth2.0)
 - JWT REST API
 
 ## Spring
