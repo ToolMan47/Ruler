@@ -37,11 +37,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        log.info("--- JwtTokenFilter2 ---");
+        log.info("--- JwtTokenFilter ---");
         Jwt jwt = extractToken(request.getHeader(AUTHORIZATION_HEADER));
-        JwtAuthenticationToken authentication = new JwtAuthenticationToken(jwt);
-        authenticationManager.authenticate(authentication); //  to JwtProvider
-        SecurityContextHolder.getContext().setAuthentication(authentication); // TODO remove
+        if (jwt != null) {
+            JwtAuthenticationToken authentication = new JwtAuthenticationToken(jwt);
+            authenticationManager.authenticate(authentication); //  to JwtProvider
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         chain.doFilter(request, response);
     }
 

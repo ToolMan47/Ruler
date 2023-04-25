@@ -13,6 +13,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * JWT convert, verify, generate
@@ -29,11 +32,30 @@ public class JwtUtils {
     private final String secret;
     private final SecretKey SECRET_KEY;
 
+    private final String ISSUER = "ruler";
+    private final String SUBJECT = "";
+    private final String AUDIENCE = "postman";
+
     public JwtUtils(String secret) {
         this.secret = secret;
         this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+    public String generateToken(String username) {
+        Instant now = Instant.now();
+
+
+        String jws = Jwts.builder()
+                .setIssuer(ISSUER)
+                .setSubject(username)
+                .setAudience(AUDIENCE)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(6000)))
+                .setId(UUID.randomUUID().toString())
+                .signWith(SECRET_KEY)
+                .compact();
+        return jws;
+    }
 
     public void verifyToken(String tokenValue) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException {
 

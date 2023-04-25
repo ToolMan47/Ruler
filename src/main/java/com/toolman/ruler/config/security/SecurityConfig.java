@@ -42,18 +42,16 @@ public class SecurityConfig {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
         // defense
-        http.cors().and().csrf();
+        http.cors().and().csrf().disable();
 
         // Spring Security Default 設定: 全部都進入管控，就算是 "/" 也是
-        // 先設定要驗證的路徑，其餘的可以隨意存取
+        // 先設定要驗證的路徑，其餘的可以隨意存取，方便練習
         http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user")
                 .authenticated()
                 .requestMatchers("/admin")
                 .hasAuthority("ADMIN")
                 .requestMatchers("/rest/**")
                 .authenticated()
-
-
                 .anyRequest()
                 .permitAll()
         );
